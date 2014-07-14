@@ -1,0 +1,5 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes' ?>
+<compatible-packages>
+<app package="com.gameloft.android.GAND.GloftASCR"/>
+<app package="com.gameloft.android.GAND.GloftAsphalt5.asphalt5"/>
+</compatible-packages>

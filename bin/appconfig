@@ -1,0 +1,4 @@
+#!/system/bin/sh
+
+busybox cp -r /system/lib/fuugo/* /data/data/fi.axel.fuugo.msi/lib
+

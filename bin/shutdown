@@ -1,0 +1,61 @@
+#!/system/bin/busybox sh
+
+echo "shutdown" > /sys/power/wake_lock
+
+sleep 10 && if [ "$1" = "-r" ];
+then
+	reboot "$2";
+else
+	reboot -p "$1";
+fi&
+
+stop zygote;
+stop keystore;
+stop netd;
+stop ril-daemon;
+stop bootanim;
+stop media;
+stop dbus;
+stop bluetoothd;
+stop installd;
+stop dhcpcd;
+
+sleep 1;
+sync;
+
+while read DEV DIR FS OPTS X Y;
+do
+	if [ "$FS" = "ext3" ] || [ "$FS" = "ext4" ];
+	then
+		mount -o remount,ro $DEV $DIR;
+		if [ "$?" != "0" ];
+		then
+			echo "mount -o remount,ro $DEV $DIR failed, try again";
+			sleep 1;
+			mount -o remount,ro $DEV $DIR;
+			if [ "$?" != "0" ];
+			then
+				echo "mount -o remount,ro $DEV $DIR failed, try again";
+				sleep 1;
+				mount -o remount,ro $DEV $DIR || echo "mount -o remount,ro $DEV $DIR failed";
+			fi;
+		fi;
+	fi;
+done < /proc/mounts
+
+vdc volume list | while read CODE LABEL DIR STATE;
+do
+	if [ "$CODE" = "110" ];
+	then
+		vdc volume unmount $LABEL || echo "vdc volume unmount $LABEL failed"
+	fi;
+done
+
+sync;
+
+if [ "$1" = "-r" ];
+then
+	reboot "$2";
+else
+	reboot -p "$1";
+fi

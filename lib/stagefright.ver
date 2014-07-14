@@ -1,0 +1,3 @@
+this is android 2.3 stagefright ver 960 by hbb 2011.10.22_10:55;
+
+1:解决ID3解析出错而导致录像10分钟会死掉的现象,在M16项目中报出。
